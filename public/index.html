@@ -5,19 +5,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Doly Voice</title>
 
-    <!-- Tailwind CSS CDN -->
     <link
       href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css"
       rel="stylesheet"
     />
-
-    <!-- Font Awesome CDN for icons -->
     <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
     />
 
-    <style type="text/css">
+    <style>
       #local-video {
         position: absolute;
         height: 30%;
@@ -29,24 +26,10 @@
         height: 100%;
         width: 100%;
       }
-      /* Style des boutons */
-      .control-button {
-        width: 56px;
-        height: 56px;
-        border-radius: 50%;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        background-color: rgba(0, 0, 0, 0.6);
-        color: white;
-        transition:
-          background-color 0.3s,
-          transform 0.3s;
-        font-size: 24px; /* Taille de l'icône */
-      }
-      .control-button:hover {
-        background-color: rgba(0, 0, 0, 0.8);
-        transform: scale(1.1);
+      #room-list {
+        max-height: 200px;
+        overflow-y: auto;
+        margin-top: 10px;
       }
     </style>
   </head>
@@ -63,6 +46,7 @@
         type="text"
         class="border border-gray-300 rounded-md px-4 py-2 text-black"
       />
+      <div id="room-list-container" class="room-list-container"></div>
       <button
         id="connect-button"
         class="mt-4 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-700"
@@ -88,14 +72,11 @@
         class="w-full h-full object-cover rounded-lg"
       ></video>
 
-      <!-- Boutons Mute et Stop Caméra -->
       <div class="absolute bottom-4 right-4 flex space-x-4">
-        <!-- Bouton Mute -->
         <button id="mute-button" class="control-button" type="button">
           <i id="mute-icon" class="fas fa-microphone"></i>
         </button>
 
-        <!-- Bouton Stop Camera -->
         <button id="camera-button" class="control-button" type="button">
           <i id="camera-icon" class="fas fa-video"></i>
         </button>

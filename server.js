@@ -9,7 +9,6 @@ const io = new Server(server);
 
 app.use("/", express.static(path.join(__dirname, "public")));
 
-// Route wildcard pour servir index.html pour toutes les autres routes
 app.get("*", (req, res) => {
   res.sendFile(path.join(__dirname, "public", "index.html"));
 });
@@ -19,10 +18,8 @@ io.on("connection", (socket) => {
     const selectedRoom = io.sockets.adapter.rooms.get(roomId);
     const numberOfClients = selectedRoom ? selectedRoom.size : 0;
 
-    // Rejoindre la room
     socket.join(roomId);
 
-    // Informer le client de la situation actuelle de la room
     if (numberOfClients === 0) {
       console.log(
         `Creating room ${roomId} and emitting room_created socket event`
@@ -33,11 +30,10 @@ io.on("connection", (socket) => {
         `Joining room ${roomId} and emitting room_joined socket event`
       );
       socket.emit("room_joined", roomId);
-      socket.to(roomId).emit("user_joined", roomId); // Notifier les autres participants
+      socket.to(roomId).emit("user_joined", roomId);
     }
   });
 
-  // Renvoyer l'offre WebRTC quand un nouvel utilisateur rejoint après un rafraîchissement
   socket.on("start_call", (roomId) => {
     console.log(`Broadcasting start_call event to peers in room ${roomId}`);
     socket.to(roomId).emit("start_call");

@@ -9,7 +9,6 @@ const videoChatContainer = document.getElementById("video-chat-container");
 const localVideoComponent = document.getElementById("local-video");
 const remoteVideoComponent = document.getElementById("remote-video");
 
-// Variables
 const socket = io();
 const mediaConstraints = {
   audio: true,
@@ -18,10 +17,9 @@ const mediaConstraints = {
 let localStream;
 let remoteStream;
 let isRoomCreator;
-let rtcPeerConnection; // Connection between the local device and the remote peer
+let rtcPeerConnection;
 let roomId;
 
-// Free public STUN servers provided by Google
 const iceServers = {
   iceServers: [
     { urls: "stun:stun.l.google.com:19302" },
@@ -32,21 +30,18 @@ const iceServers = {
   ],
 };
 
-// On page load, check if there's a roomId in the URL
 document.addEventListener("DOMContentLoaded", () => {
   const path = window.location.pathname;
   if (path !== "/") {
-    const roomFromUrl = path.substring(1); // Get the roomId from the URL path
-    joinRoom(roomFromUrl); // Automatically join the room if one is in the URL
+    const roomFromUrl = path.substring(1);
+    joinRoom(roomFromUrl);
   }
 });
 
-// BUTTON LISTENER ============================================================
 connectButton.addEventListener("click", () => {
   joinRoom(roomInput.value);
 });
 
-// SOCKET EVENT CALLBACKS =====================================================
 socket.on("room_created", async () => {
   console.log("Socket event callback: room_created");
   await setLocalStream(mediaConstraints);
@@ -101,7 +96,6 @@ socket.on("webrtc_ice_candidate", (event) => {
   rtcPeerConnection.addIceCandidate(candidate);
 });
 
-// FUNCTIONS ==================================================================
 function joinRoom(room) {
   if (room === "") {
     alert("Please type a room ID");
@@ -116,39 +110,32 @@ function joinRoom(room) {
 let isAudioMuted = false;
 let isVideoStopped = false;
 
-// Sélectionne les icônes des boutons
 const muteButton = document.getElementById("mute-button");
 const cameraButton = document.getElementById("camera-button");
 const muteIcon = document.getElementById("mute-icon");
 const cameraIcon = document.getElementById("camera-icon");
 
-// Mute / Unmute audio
 muteButton.addEventListener("click", () => {
   if (localStream && localStream.getAudioTracks().length > 0) {
     isAudioMuted = !isAudioMuted;
     localStream.getAudioTracks()[0].enabled = !isAudioMuted;
 
-    // Change l'icône en fonction de l'état
     muteIcon.className = isAudioMuted
       ? "fas fa-microphone-slash"
       : "fas fa-microphone";
   }
 });
 
-// Stop / Start camera
 cameraButton.addEventListener("click", () => {
   if (localStream && localStream.getVideoTracks().length > 0) {
     isVideoStopped = !isVideoStopped;
     localStream.getVideoTracks()[0].enabled = !isVideoStopped;
 
-    // Change l'icône en fonction de l'état
     cameraIcon.className = isVideoStopped
       ? "fas fa-video-slash"
       : "fas fa-video";
   }
 });
-
-// Join room logic remains the same
 
 function showVideoConference() {
   roomSelectionContainer.style.display = "none";
